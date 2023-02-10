@@ -29,6 +29,8 @@
 		○ Department name will be underneath (we can add nice icons if time permits). If there is one class but it has multiple teachers it could list out all of the teachers as well
 		○ Basic qualification (not in depth)
 		○ An expand button to see all of the qualifications
+		
+###### Extras
 	
 	- Clicking on the job will do the same thing that the expand feature will do
 	- There will be an "apply" button that's added to the card when you expand or click on the card
