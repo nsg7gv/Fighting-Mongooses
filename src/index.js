@@ -11,7 +11,8 @@ function App() {
     <Router>
       <div className="App">
       <Routes>
-        <Route path="/" exact element={<SignInSide />} />
+        <Route path="/" exact element={<JobsSide />} />
+        <Route exact path="/signup" element={<SignInSide/> } />
         <Route exact path="/signup" element={<SignUpSide/> } />
         </Routes>
       </div>
