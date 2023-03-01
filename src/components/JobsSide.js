@@ -35,7 +35,7 @@ function JobsSide() {
     window.location.reload()
   }
 
-  const updateDB = async (id, courseID,term,name,type,numPositions,description,state) => {
+  const updateDB = async (id, courseID,term,type,numPositions,description,state) => {
     const userDoc = doc(db, "backenddata", id)
     const NewDoc = { Courseid: courseID, Term : term,Type : type, NumPositions : numPositions, Description : description, State : state}
     console.log("Updated the Data on System")
