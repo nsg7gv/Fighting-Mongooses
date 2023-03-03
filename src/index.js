@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import SignInSide from "./components/SignInSide";
 import SignUpSide from "./components/SignUpSide";
-import JobsSide from "./components/JobsSide";
+import JobsSideTest from "./components/JobsSideTest";
 import { BrowserRouter as Router,Routes, Route } from "react-router-dom";
 
 import "./styles.css";
@@ -12,7 +12,7 @@ function App() {
     <Router>
       <div className="App">
       <Routes>
-        <Route path="/" exact element={<JobsSide/>} />
+        <Route path="/" exact element={<JobsSideTest/>} />
         <Route exact path="/signup" element={<SignInSide/> } />
         <Route exact path="/signup" element={<SignUpSide/> } />
         </Routes>
