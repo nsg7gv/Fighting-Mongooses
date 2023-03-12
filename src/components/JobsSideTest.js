@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import { db } from './firebase-config';
 import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore"
 import Typography from "@material-ui/core/Typography";
@@ -6,6 +6,7 @@ import TextField from "@material-ui/core/TextField";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import { Battery1Bar } from '@mui/icons-material';
+import Popup from './popup';
 
 function JobsSide() {
   // Define state variables to manage form input and job data
@@ -16,29 +17,70 @@ function JobsSide() {
   const [numPositions, setNumPosition] = useState("");
   const [state, setState] = useState("");
 
-  // Define a reference to the "backenddata" collection in Firestore
-  const UsersCollectionRef = collection(db, "backenddata");
+  //popup card 
+  const [users, setUsers] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
 
-  // Use the useEffect hook to fetch data from Firestore when the component mounts
+  // reference to the "backenddata" collection in Firestore
+  const JobCollectionRef = collection(db, "backenddata");
+  // reference to the "profile" collection in Firestore
+  const UserCollectionRef = collection(db, "profile");
+
   useEffect(() => {
-    getUsersData();
+    getUserData();
   }, []);
 
   // Fetch data from Firestore and update the state variable "jobs"
-  const getUsersData = async () => {
-    const data = await getDocs(UsersCollectionRef);
+  const getUserData = async () => {
+    const data = await getDocs(UserCollectionRef);
+    setUsers(data.docs.map((elem) => ({ ...elem.data(), id: elem.id })));
+  };
+
+  // Use the useEffect hook to fetch data from Firestore when the component mounts
+  useEffect(() => {
+    getJobData();
+  }, []);
+
+  // Fetch data from Firestore and update the state variable "jobs"
+  const getJobData = async () => {
+    const data = await getDocs(JobCollectionRef);
     setJobs(data.docs.map((elem) => ({ ...elem.data(), id: elem.id })));
   };
 
+  /* This function may need to be used to find applicants to a specific job
+  useEffect(() => {
+    async function fetchUserProfiles() {
+      const userProfiles = await getUserProfiles();
+      setUsers(userProfiles);
+    }
+    fetchUserProfiles();
+  }, []);
+
+  const getUserProfiles = async () => {
+    try {
+      const userProfilesCollectionRef = collection(db, 'profile');
+      const querySnapshot = await getDocs(userProfilesCollectionRef);
+      const userProfiles = [];
+      querySnapshot.forEach((doc) => {
+        userProfiles.push({ id: doc.id, ...doc.data() });
+      });
+      return userProfiles;
+    } catch (error) {
+      console.error('Error retrieving user profiles: ', error);
+      return null;
+    }
+  }*/
+
   // Add a new job to Firestore
   const createJob = async () => {
-    await addDoc(UsersCollectionRef, {
+    await addDoc(JobCollectionRef, {
       Courseid: courseID,
       Term: term,
       Type: type,
       NumPositions: numPositions,
       State: state,
     });
+    window.location.reload();
   };
 
   const handleUpdate = async () => {
@@ -59,7 +101,7 @@ function JobsSide() {
     try {
       // Query Firebase for documents that match the specified courseID
       const jobQuerySnapshot = await getDocs(
-        query(UsersCollectionRef, where("Courseid", "==", id))
+        query(JobCollectionRef, where("Courseid", "==", id))
       );
       // If there is at least one document that matches the query
       if (jobQuerySnapshot.docs.length > 0) {
@@ -85,7 +127,7 @@ function JobsSide() {
     try {
       const jobQuerySnapshot = await getDocs(
         // Query Firebase for documents that match the specified courseID
-        query(UsersCollectionRef, where("Courseid", "==", id))
+        query(JobCollectionRef, where("Courseid", "==", id))
       );
       if (jobQuerySnapshot.docs.length > 0) {
         // If there is at least one document that matches the query
@@ -101,15 +143,11 @@ function JobsSide() {
     }
   };
 
-
-
-
   // Check user
   // Define an asynchronous function called "checkUser"
   const checkUser = async () => {
-    // Use the "addDoc" function to add a new document to the "UsersCollectionRef" collection in Firestore
-    // The new document will contain the values of the "courseID", "term", "type", "numPositions", and "state" variables
-    await addDoc(UsersCollectionRef, {
+
+    await addDoc(JobCollectionRef, {
       Courseid: courseID,
       Term: term,
       Type: type,
@@ -126,7 +164,7 @@ function JobsSide() {
         <container fullWidth>
           <>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <h2 style={{ textAlign: 'center' }}>Edit Jobs</h2>
+              <h2 style={{ textAlign: 'center' }}>Manage Jobs</h2>
               <Grid container spacing={2} justify="center">
                 <Grid item xs={12} sm={10}>
                   <TextField
@@ -134,7 +172,7 @@ function JobsSide() {
                     size='medium'
                     fullWidth
                     name='courseID'
-                    placeholder='CourseID'
+                    placeholder='*CourseID'
                     onChange={(event) => { setCourseID(event.target.value) }}
                   />
                 </Grid>
@@ -191,11 +229,12 @@ function JobsSide() {
                 </Grid>
               </Grid>
             </div>
+            <br></br>
             <button onClick={createJob} className="button">
-              Add to DB
+              Create Job
             </button>
             <button onClick={handleUpdate} className="button">
-              Update User
+              Update Job
             </button>
             <button onClick={handleDelete} className="button">
               Delete Job
@@ -209,7 +248,7 @@ function JobsSide() {
           <h2 style={{ textAlign: 'center', marginRight: '175px' }}>Current Jobs</h2>
         </Container>
 
-        {jobs.map(user => {
+        {jobs.map(job => {
           return (
             <div className='hover:animate-pulse m-4 bg-gray-600 w-1/4 rounded-md p-2'>
               <Container component="main" maxWidth="xs">
@@ -227,13 +266,27 @@ function JobsSide() {
                       </thead>
                       <tbody>
                         <tr>
-                          <td>{user.Courseid}</td>
-                          <td>{user.Term}</td>
-                          <td>{user.Type}</td>
-                          <td>{user.NumPositions}</td>
-                          <td>{user.State}</td>
+                          <td>{job.Courseid}</td>
+                          <td>{job.Term}</td>
+                          <td>{job.Type}</td>
+                          <td>{job.NumPositions}</td>
+                          <td>{job.State}</td>
                           <td>
-                            <button>View</button> {/* todo add function */}
+                            {/* Change the popup to show applicants*/} 
+                            <button onClick={() => setShowPopup(true)}>Applicants</button>
+                            <div>
+                              {users.map((user) => (
+                                <div key={user.id}>
+                                  {showPopup && (
+                                    <Popup title="Applicants" onClose={() => setShowPopup(false)}> 
+                                    <p><strong>Email:</strong> {user.Email}</p>
+                                      <p><strong>Name:</strong> {user.LName}, {user.FName}</p>
+                                    </Popup>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                            
                           </td>
                         </tr>
                       </tbody>
@@ -248,9 +301,6 @@ function JobsSide() {
       </div>
     </div>
   );
-
-
-
 
 }
 
