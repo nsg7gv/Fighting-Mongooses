@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import SignInSide from "./components/SignInSide";
 import SignUpSide from "./components/SignUpSide";
+import Profile from './components/profile'
 import { BrowserRouter as Router,Routes, Route } from "react-router-dom";
 
 import "./styles.css";
@@ -11,8 +12,9 @@ function App() {
     <Router>
       <div className="App">
       <Routes>
-        <Route path="/" exact element={<SignInSide />} />
-        <Route exact path="/signup" element={<SignUpSide/> } />
+        <Route path="/" element={<Profile />} />
+        {/* <Route path="/" exact element={<SignInSide />} />
+        <Route exact path="/signup" element={<SignUpSide/> } /> */}
         </Routes>
       </div>
     </Router>
