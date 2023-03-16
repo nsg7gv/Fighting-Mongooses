@@ -12,7 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import backgroundImage from '../../src/assets/images/logo.jpeg';
-
+ 
 const Message = () => (
     <Typography variant="body2" color="textSecondary" align="center">
       {"UMKC CS 451-R Project"}
