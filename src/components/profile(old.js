@@ -5,26 +5,27 @@ import GetGrades from './grade_pull'
 import { db } from '../firebase'
 import 'firebase/firestore';
 
-const getOptions = () => {
-  return [
-    { value: '', label: 'Select a grade' },
-    { value: 'A', label: 'Grade A' },
-    { value: 'A-', label: 'Grade A-' },
-    { value: 'B+', label: 'Grade B+' },
-    { value: 'B', label: 'Grade B' },
-    { value: 'B-', label: 'Grade B-' },
-    { value: 'C+', label: 'Grade C+' },
-    { value: 'C', label: 'Grade C' },
-    { value: 'C-', label: 'Grade C-' },
-    { value: 'F', label: 'Grade F' },
-    { value: 'W', label: 'Withdrawn' },
-    { value: 'Drop', label: 'Dropped' },
-  ];
-};
 
 export const Database = () => {
     const [cs101, setCS101] = useState('');
     const [cs191, setCS191] = useState('');      
+
+    const getOptions = () => {
+      return [
+        { value: '', label: 'Select a grade' },
+        { value: 'A', label: 'Grade A' },
+        { value: 'A-', label: 'Grade A-' },
+        { value: 'B+', label: 'Grade B+' },
+        { value: 'B', label: 'Grade B' },
+        { value: 'B-', label: 'Grade B-' },
+        { value: 'C+', label: 'Grade C+' },
+        { value: 'C', label: 'Grade C' },
+        { value: 'C-', label: 'Grade C-' },
+        { value: 'F', label: 'Grade F' },
+        { value: 'W', label: 'Withdrawn' },
+        { value: 'Drop', label: 'Dropped' },
+      ];
+    };
 
     const handleCS101Change = (event) => {
         const newValue = event.target.value;
