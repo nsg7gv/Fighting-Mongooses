@@ -1,12 +1,10 @@
 import { React, useEffect, useState } from 'react';
 import { db } from './firebase-config';
 import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore"
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import { Battery1Bar } from '@mui/icons-material';
-import Popup from './popup';
+import SignOutButton from './signOutButton';
+import JobForm from './jobForm';
+import ActionButtons from './actionButtons';
+import JobList from './jobList';
 
 function JobsSide() {
   // Define state variables to manage form input and job data
@@ -73,14 +71,26 @@ function JobsSide() {
 
   // Add a new job to Firestore
   const createJob = async () => {
-    await addDoc(JobCollectionRef, {
-      Courseid: courseID,
-      Term: term,
-      Type: type,
-      NumPositions: numPositions,
-      State: state,
-    });
-    window.location.reload();
+    try {
+      // Query Firebase for documents that match the specified courseID
+      const jobQuerySnapshot = await getDocs(
+        query(JobCollectionRef, where("Courseid", "==", courseID.toUpperCase()))
+      );
+      if (jobQuerySnapshot.docs.length === 0) {
+        await addDoc(JobCollectionRef, {
+          Courseid: courseID.toUpperCase(),
+          Term: term,
+          Type: type,
+          NumPositions: numPositions,
+          State: state,
+        });
+        window.location.reload();
+      } else {
+        alert(`A job with CourseID ${courseID.toUpperCase()} already exists.`);
+      }
+    } catch (error) {
+      console.error("Error creating document: ", error);
+    }
   };
 
   const handleUpdate = async () => {
@@ -159,145 +169,18 @@ function JobsSide() {
     window.location.reload();
   };
   return (
-    <div className='split-screen'>
-      <div className='split-screen-left' >
-        <container fullWidth>
-          <>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <h2 style={{ textAlign: 'center' }}>Manage Jobs</h2>
-              <Grid container spacing={2} justify="center">
-                <Grid item xs={12} sm={10}>
-                  <TextField
-                    variant='outlined'
-                    size='medium'
-                    fullWidth
-                    name='courseID'
-                    placeholder='*CourseID'
-                    onChange={(event) => { setCourseID(event.target.value) }}
-                  />
-                </Grid>
-              </Grid>
-              <Grid container spacing={2} justify="center">
-                <Grid item xs={12} sm={10}>
-                  <TextField
-                    variant='outlined'
-                    size='medium'
-                    fullWidth
-                    name='term'
-                    placeholder='Term'
-                    onChange={(event) => { setTerm(event.target.value) }}
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid container spacing={2} justify="center">
-                <Grid item xs={12} sm={10}>
-                  <TextField
-                    variant='outlined'
-                    size='medium'
-                    fullWidth
-                    name='type'
-                    placeholder='Type'
-                    onChange={(event) => { setType(event.target.value) }}
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid container spacing={2} justify="center">
-                <Grid item xs={12} sm={10}>
-                  <TextField
-                    variant='outlined'
-                    size='medium'
-                    fullWidth
-                    name='numPositions'
-                    placeholder='NumPositions'
-                    onChange={(event) => { setNumPosition(event.target.value) }}
-                  />
-                </Grid>
-              </Grid>
-
-              <Grid container spacing={3} justify="center">
-                <Grid item xs={12} sm={10}>
-                  <TextField
-                    variant='outlined'
-                    size='medium'
-                    fullWidth
-                    name='state'
-                    placeholder='State'
-                    onChange={(event) => { setState(event.target.value) }}
-                  />
-                </Grid>
-              </Grid>
-            </div>
-            <br></br>
-            <button onClick={createJob} className="button">
-              Create Job
-            </button>
-            <button onClick={handleUpdate} className="button">
-              Update Job
-            </button>
-            <button onClick={handleDelete} className="button">
-              Delete Job
-            </button>
-            <br /><br />
-          </>
-        </container>
+    <div>
+      <div>
+        <SignOutButton />
       </div>
-      <div className='split-screen-right'>
-        <Container fullWidth>
-          <h2 style={{ textAlign: 'center', marginRight: '175px' }}>Current Jobs</h2>
-        </Container>
-
-        {jobs.map(job => {
-          return (
-            <div className='hover:animate-pulse m-4 bg-gray-600 w-1/4 rounded-md p-2'>
-              <Container component="main" maxWidth="xs">
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={15}>
-                    <table className='jobTable'>
-                      <thead>
-                        <tr>
-                          <th>Course ID</th>
-                          <th>Term</th>
-                          <th>Type</th>
-                          <th>Num Positions</th>
-                          <th>State</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>{job.Courseid}</td>
-                          <td>{job.Term}</td>
-                          <td>{job.Type}</td>
-                          <td>{job.NumPositions}</td>
-                          <td>{job.State}</td>
-                          <td>
-                            {/* Change the popup to show applicants*/} 
-                            <button onClick={() => setShowPopup(true)}>Applicants</button>
-                            <div>
-                              {users.map((user) => (
-                                <div key={user.id}>
-                                  {showPopup && (
-                                    <Popup title="Applicants" onClose={() => setShowPopup(false)}> 
-                                    <p><strong>Email:</strong> {user.Email}</p>
-                                      <p><strong>Name:</strong> {user.LName}, {user.FName}</p>
-                                    </Popup>
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                            
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </Grid>
-                </Grid>
-              </Container>
-              <br></br>
-            </div>
-          )
-        })}
+      <div className='split-screen'>
+        <div className='split-screen-left'>
+          <JobForm setCourseID={setCourseID} setTerm={setTerm} setType={setType} setNumPosition={setNumPosition} setState={setState} />
+          <ActionButtons createJob={createJob} handleUpdate={handleUpdate} handleDelete={handleDelete} />
+        </div>
+        <div className='split-screen-right'>
+          <JobList jobs={jobs} users={users} showPopup={showPopup} setShowPopup={setShowPopup} />
+        </div>
       </div>
     </div>
   );
