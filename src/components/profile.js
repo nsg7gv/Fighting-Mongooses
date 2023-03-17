@@ -24,26 +24,37 @@ const getOptions = () => {
 const Profile = () => {
 //   const userEmail = 'sam@umkc.edu';
     const userEmail = 'luke@umkc.edu';
-    const [data, setData] = useState([]);
-    const [value, setValue] = React.useState('1');
+    const [data, setData] = useState([]); //Firestore Document
+
+
     const [eceAnchor, seteceAnchor] = useState(null)
-
-    const options = getOptions();
-
-    const [ece216, setECE216] = useState('');
-
+    const closeECEAnchor = () => {
+        seteceAnchor(null);
+    };
     const editGradeECE = (event) => {
         seteceAnchor(event.currentTarget);
     }
 
-    const closeECEAnchor = () => {
-        seteceAnchor(null);
-    };
 
-    const handleECE216Change = (event) => {
+    const options = getOptions(); //Drop down menu
+
+    // Class grade states
+    const [ece216, setECE216] = useState(null);
+
+    const handleChangeECE216 = async (event) => {
         let {value} = event.target
-        console.log({value})
-        // data.updateDoc({ece216: {value}})
+        console.log(value)
+        console.log(userEmail)
+        console.log('Starting');
+
+        const docRef = db.collection('profile').doc(userEmail);
+        docRef.update({ ece216: 'new' }).then(() => {
+          console.log('updated')
+        });        
+
+    //     await updateDoc(data, value);
+    //     console.log("Document successfully updated!");
+    //   };
     };
 
     useEffect(() => {
@@ -220,13 +231,12 @@ const Profile = () => {
                                                     <Grid item>
                                                         <Typography variant='p' align='justify' color='textSecondary' paragraph fontSize= "6">
                                                             <p>ECE 216: </p>
-                                                            <select value={ece216} onChange={handleECE216Change}>
+                                                            <select onChange={handleChangeECE216}>
                                                                 {options.map((option) => (
                                                                     <option key={option.value} value={option.value}>
                                                                         {option.label}
                                                                     </option>
-                                                            ))}
-                                                            </select>
+                                                            ))}</select>
                                                             <p>ECE 226: {data.cs191}</p>
                                                             <p>ECE 228: {data.cs201}</p> 
                                                             <p>ECE 241: {data.cs191}</p>
