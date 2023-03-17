@@ -103,16 +103,17 @@ function JobsSide() {
       State: state,
     };
     // Call the updateJob function with the courseID and updated data
-    await updateJob(courseID, updatedData);
+    const updated = await updateJob(courseID, updatedData);
+    if (!updated) {
+      alert(`No job found with CourseID ${courseID}`);
+    }
   };
 
   // Define a function that updates a document in Firebase with the specified ID
   const updateJob = async (id, updatedData) => {
     try {
       // Query Firebase for documents that match the specified courseID
-      const jobQuerySnapshot = await getDocs(
-        query(JobCollectionRef, where("Courseid", "==", id))
-      );
+      const jobQuerySnapshot = await getDocs(query(JobCollectionRef, where("Courseid", "==", id)));
       // If there is at least one document that matches the query
       if (jobQuerySnapshot.docs.length > 0) {
         // Get the reference to the first document that matches the query
@@ -120,34 +121,34 @@ function JobsSide() {
         // Update the document with the updated data
         await updateDoc(jobRef, updatedData);
         console.log("Document successfully updated!");
+        window.location.reload();
+        return true;
       } else {
-        console.log(`No job found with id ${id}`);
+        return false;
       }
-      // Reload the page to show the updated data
-      window.location.reload();
     } catch (error) {
       console.error("Error updating document: ", error);
     }
   };
+
   const handleDelete = async () => {
-    await deleteJob(courseID);
+    const deleted = await deleteJob(courseID);
+    if (!deleted) {
+      alert(`No job found with CourseID ${courseID}`);
+    }
   };
 
-  const deleteJob = async (id) => {//delete a job with the selected courseid
+  const deleteJob = async (id) => {
     try {
-      const jobQuerySnapshot = await getDocs(
-        // Query Firebase for documents that match the specified courseID
-        query(JobCollectionRef, where("Courseid", "==", id))
-      );
+      const jobQuerySnapshot = await getDocs(query(JobCollectionRef, where("Courseid", "==", id)));
       if (jobQuerySnapshot.docs.length > 0) {
-        // If there is at least one document that matches the query
         await deleteDoc(jobQuerySnapshot.docs[0].ref);
-        // delete the document
         console.log("Document successfully deleted!");
+        window.location.reload();
+        return true;
       } else {
-        console.log(`No job found with id ${id}`);
+        return false;
       }
-      window.location.reload();
     } catch (error) {
       console.error("Error deleting document: ", error);
     }

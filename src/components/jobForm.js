@@ -17,9 +17,8 @@ const JobForm = ({ setCourseID, setTerm, setType, setNumPosition, setState }) =>
           name="courseID"
           placeholder="*Course ID"
           inputProps={{ style: { textTransform: 'uppercase' } }}
-          onChange={(event) => {
-            setCourseID(event.target.value);
-          }}
+          onChange={(event) => setCourseID(event.target.value.toUpperCase())}
+
         />
       </Grid>
     </Grid>
