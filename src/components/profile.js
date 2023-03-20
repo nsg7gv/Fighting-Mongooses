@@ -6,7 +6,7 @@ import { Typography, Container, Grid, Card, CardActions, CardContent, TextField,
 
 const getOptions = () => {
     return [
-      { value: '', label: 'Select a grade' },
+      { value: '', label: 'Select Grade' },
       { value: 'A', label: 'Grade A' },
       { value: 'A-', label: 'Grade A-' },
       { value: 'B+', label: 'Grade B+' },
@@ -21,6 +21,54 @@ const getOptions = () => {
       { value: ' ', label: 'Remove Grade'}
     ];
   };
+
+  const getOptionsMajor = () => {
+    return [
+      { value: '', label: 'Select Major' },
+      { value: 'CS', label: 'Comp Sci' },
+      { value: 'IT', label: 'Info Tech' },
+      { value: 'ECE', label: 'ECE' },
+      { value: 'EE', label: 'EE' },
+    ];
+  };
+
+  const getOptionsLevel = () => {
+    return [
+      { value: '', label: 'Select Level' },
+      { value: 'BS', label: 'Bachelors' },
+      { value: 'MS', label: 'Masters' },
+      { value: 'PhD', label: 'Doctorate' },
+    ];
+  };
+
+  const getOptionsSem = () => {
+    return [
+      { value: '', label: 'Select Semester' },
+      { value: 'Fall', label: 'Fall' },
+      { value: 'Spring', label: 'Spring' },
+      { value: 'Summer', label: 'Summer' },
+    ];
+  };
+
+  const getOptionsYear = () => {
+    return [
+      { value: '', label: 'Select Year' },
+      { value: '2023', label: '2023' },
+      { value: '2024', label: '2024' },
+      { value: '2025', label: '2025' },
+      { value: '2026', label: '2026' },
+      { value: '2027', label: '2027' },
+      { value: '2028', label: '2028' },
+      { value: '2029', label: '2029' },
+      { value: '2030', label: '2030' },
+    ];
+  };
+
+  const options = getOptions(); //Drop down menu
+  const optionsMajor = getOptionsMajor(); //Drop down menu
+  const optionsLevel = getOptionsLevel(); //Drop down menu
+  const optionsSem = getOptionsSem(); //Drop down menu
+  const optionsYear = getOptionsYear(); //Drop down menu
 
 const Profile = () => {
 //   const userEmail = 'sam@umkc.edu';
@@ -54,8 +102,30 @@ const Profile = () => {
         seteceAnchor(event.currentTarget);
     }
 
+{/* Profile Edit */}
+const handleChangeMajor = async (event) => {
+    let {value} = event.target
+    const docRef = db.collection('profile').doc(userEmail);
+    docRef.update({ Major: value }).then(() => {});        
+};
 
-    const options = getOptions(); //Drop down menu
+const handleChangeLevel = async (event) => {
+    let {value} = event.target
+    const docRef = db.collection('profile').doc(userEmail);
+    docRef.update({ Level: value }).then(() => {});        
+};
+
+const handleChangeSem = async (event) => {
+    let {value} = event.target
+    const docRef = db.collection('profile').doc(userEmail);
+    docRef.update({ GradSem: value }).then(() => {});        
+};
+
+const handleChangeYear = async (event) => {
+    let {value} = event.target
+    const docRef = db.collection('profile').doc(userEmail);
+    docRef.update({ GradYear: value }).then(() => {});        
+};
 
 {/* CS Edit */}
     const handleChangeCS101 = async (event) => {
@@ -348,7 +418,7 @@ const Profile = () => {
         docRef.update({ it321: value }).then(() => {});        
     };
  
- {/**/}   
+ {/* */}   
     useEffect(() => {
         console.log('Searching')
         db.collection('profile').doc(userEmail).get()
@@ -508,11 +578,12 @@ const Profile = () => {
                                     <Button variant="contained" onClick={editGradeECE}>Edit</Button>
                                 </Grid>
 
+
 {/* Popover Section Profile */}
     <Grid>
         <Popover
-            open={Boolean(csAnchor)} 
-            anchorEl={csAnchor} 
+            open={Boolean(studentAnchor)} 
+            anchorEl={studentAnchor} 
             anchorOrigin={{
                 vertical: 'bottom', 
                 horizontal: 'right'}}
@@ -522,16 +593,49 @@ const Profile = () => {
             }}>
             <Typography variant='p'>
                  <div style={{
-                     width: '825px',
-                     height: '800px'
+                     width: '400px',
+                     height: '500px'
                  }}>
                     <Grid container spacing={5} justifyContent='center' columns={5}>
                         <Grid item>
                             <Typography variant='p' align='justify' color='textSecondary' paragraph fontSize= "6">
 
+                                <p>Major: {data.Major}</p>
+                                <select onChange={handleChangeMajor}>
+                                    {optionsMajor.map((option) => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                ))}</select>
+
+                                <p>Current Level: {data.Level}</p>
+                                <select onChange={handleChangeLevel}>
+                                    {optionsLevel.map((option) => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                ))}</select>
+
+                                <p>Graduation Semester: {data.GradSem}</p>
+                                <select onChange={handleChangeSem}>
+                                    {optionsSem.map((option) => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                ))}</select>
+
+                                <p>Graduation Year: {data.GradYear}</p>
+                                <select onChange={handleChangeYear}>
+                                    {optionsYear.map((option) => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                ))}</select>
+
                             </Typography>
                         </Grid>
                         <Grid button justifyContent='right'>
+                            <br></br>
                             <br></br>
                             <Button variant="contained" onClick={closeStudentAnchor}> Close </Button>
                         </Grid>
@@ -801,7 +905,7 @@ const Profile = () => {
                         </Grid>
                         <Grid button justifyContent='right'>
                             <br></br>
-                            <Button variant="contained" onClick={closeECEAnchor}> Close </Button>
+                            <Button variant="contained" onClick={closecsAnchor}> Close </Button>
                         </Grid>
                     </Grid>
                 </div>
@@ -1038,6 +1142,21 @@ const Profile = () => {
                         Files:
                     </Typography>
                     <Divider variant='inset' />
+                    <Grid container spacing={5} justifyContent='center' columns={5} direction='column'>
+                        <Grid item>
+                            <Typography variant='p' align='center' color='textSecondary' paragraph>
+                                <p>Transcript: </p>
+                                <Button variant="contained">Upload Transcript</Button>
+                            </Typography>
+                        </Grid>
+
+                        <Grid item>
+                            <Typography variant='p' align='center' color='textSecondary' paragraph>
+                                <p>GTA Certification:</p>
+                            </Typography>
+                        </Grid>
+
+                    </Grid>
                 </Container>
             </div>
         </main>
