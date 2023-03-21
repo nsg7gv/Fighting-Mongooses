@@ -8,7 +8,7 @@ const SignOutButton = () => (
       variant="contained"
       style={{ backgroundColor: '#005293', color: 'white' }}
       component={Link}
-      to="/signin"
+      to="/signup"
     >
       Sign Out
     </Button>
