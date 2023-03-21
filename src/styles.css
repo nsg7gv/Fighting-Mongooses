@@ -2,4 +2,93 @@
     font-family: sans-serif;
     text-align: center;
   }
+  table {
+    border-collapse: collapse;
+    border: 2px solid gold;
+    width: 800px;
+    height: 200px;
+  }
+    
+  td,th {
+    text-align: left;
+  }
+
+  .jobTable {
+    width: 300%;
+    height: 100%;
+    table-layout: auto;
+    border-collapse: collapse;
+    margin: 0;
+  }
+  
+  
+  .jobTable th,
+  .jobTable td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid white;
+  }
+  
+  .jobTable th {
+    background-color: #005293;
+    color: white;
+  }
+  
+  .jobTable tr:nth-child(even) {
+    background-color: white;
+  }
+  
+  .jobTable tr:hover {
+    background-color: white;
+  }
+
+  .split-screen {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .split-screen-left {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .split-screen-right {
+    flex: 3;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    max-width: 80%;
+    align-items: flex-start;
+    height: 100%;
+  }
+
+  .button {
+    padding: 12px 24px;
+    border-radius: 4px;
+    background-color: #005293;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    border-width: 5px;
+    border: black;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .button:hover {
+    background-color: #005293;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px);
+  }
+  
+  .popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid black;
+    padding: 1rem;
+  }
   

@@ -1,0 +1,125 @@
+return (
+    
+    <div className="split-screen-container">
+      <div className="left-pane">
+        <>
+          <Typography component="h1" variant="h5" fullWidth>
+            Admin Job Page
+          </Typography>
+
+          <container fullWidth>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant='outlined'
+                size='small'
+                fullWidth
+                name='courseID'
+                placeholder='CourseID'
+                onChange={(event) => { setCourseID(event.target.value) }}
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant='outlined'
+                size='small'
+                fullWidth
+                name='term'
+                placeholder='Term'
+                onChange={(event) => { setTerm(event.target.value) }}
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant='outlined'
+                size='small'
+                fullWidth
+                name='type'
+                placeholder='Type'
+                onChange={(event) => { setType(event.target.value) }}
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant='outlined'
+                size='small'
+                fullWidth
+                name='numPositions'
+                placeholder='NumPositions'
+                onChange={(event) => { setNumPosition(event.target.value) }}
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                variant='outlined'
+                size='small'
+                fullWidth
+                name='state'
+                placeholder='State'
+                onChange={(event) => { setState(event.target.value) }}
+              />
+            </Grid>
+          </Grid>
+          <button onClick={createJob}>Add to DB</button>
+        <button onClick={handleUpdate}>Update User</button>
+        <button onClick={handleDelete}>Delete Job</button>
+        <br /><br />
+          </container>
+        </>
+      </div>
+      
+      <div className="right-pane">
+        <Typography component="h1" variant="h5">
+          Current Jobs
+
+        </Typography>
+        <br></br>
+        {jobs.map(user => {
+          return (
+            <div className='hover:animate-pulse m-4 bg-gray-600 w-1/4 rounded-md p-2'>
+              <Container component="main" maxWidth="xs">
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={15}>
+                    <table className='jobTable'>
+                      <thead>
+                        <tr>
+                          <th>Course ID</th>
+                          <th>Term</th>
+                          <th>Type</th>
+                          <th>Num Positions</th>
+                          <th>State</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>{user.Courseid}</td>
+                          <td>{user.Term}</td>
+                          <td>{user.Type}</td>
+                          <td>{user.NumPositions}</td>
+                          <td>{user.State}</td>
+                          <td>
+                            <button>Edit</button> {/* todo add function */}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </Grid>
+                </Grid>
+              </Container>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  );
