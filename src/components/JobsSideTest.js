@@ -1,10 +1,10 @@
 import { React, useEffect, useState } from 'react';
 import { db } from './firebase-config';
-import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore"
-import SignOutButton from './signOutButton';
+import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore";
 import JobForm from './jobForm';
 import ActionButtons from './actionButtons';
 import JobList from './jobList';
+import Header from './TestHeader';
 
 function JobsSide() {
   // Define state variables to manage form input and job data
@@ -171,9 +171,7 @@ function JobsSide() {
   };
   return (
     <div>
-      <div>
-        <SignOutButton />
-      </div>
+      <Header />
       <div className='split-screen'>
         <div className='split-screen-left'>
           <JobForm setCourseID={setCourseID} setTerm={setTerm} setType={setType} setNumPosition={setNumPosition} setState={setState} />
