@@ -58,6 +58,17 @@ const useStyles = makeStyles(theme => ({
     borderRadius: "5px",
     padding: "10px 20px",
     color: "#fff"
+  },
+  errorPopup: {
+    position: "fixed",
+    top: "20px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    zIndex: 1000,
+    backgroundColor: "rgba(255, 0, 0, 0.8)",
+    borderRadius: "5px",
+    padding: "10px 20px",
+    color: "#fff"
   }
   
   
@@ -70,6 +81,7 @@ const SignInSide = () => {
   const [error, setError] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
 
   const signIn = async (event) => {
     event.preventDefault();
@@ -88,22 +100,36 @@ const SignInSide = () => {
           console.log("User signed in:", userData);
           setLoggedIn(true);
           setShowConfirmation(true); // Show the confirmation message
-        
+  
           // Hide the confirmation message after 3 seconds
           setTimeout(() => {
             setShowConfirmation(false);
           }, 3000);
         } else {
-          setError("Invalid password");
+          setError("Invalid email or password");
+          setShowErrorPopup(true); // Show the error popup
+  
+          // Hide the error popup after 3 seconds
+          setTimeout(() => {
+            setShowErrorPopup(false);
+          }, 3000);
         }
       } else {
-        setError("Email not found");
+        setError("Invalid email or password");
+        setShowErrorPopup(true); // Show the error popup
+  
+        // Hide the error popup after 3 seconds
+        setTimeout(() => {
+          setShowErrorPopup(false);
+        }, 3000);
       }
     } catch (error) {
       setError(error.message);
       console.error("Error signing in:", error);
     }
   };
+
+  
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };
@@ -116,6 +142,9 @@ const SignInSide = () => {
       {showConfirmation && (
         <div className={classes.confirmationPopup}>User is logged in.</div>
       )}
+      {showErrorPopup && (
+  <div className={classes.errorPopup}>Invalid email or password.</div>
+)}
       <CssBaseline />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
