@@ -168,23 +168,31 @@ function ResponsiveAppBar() {
               </Menu>
             </Box>
             <Typography
-              variant="h6"
-              noWrap
-              component="a"
-              href="/"
-              sx={{
-                mr: 2,
-                display: { xs: 'none', md: 'flex' },
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                backgroundColor: '#005293',
-                textDecoration: 'none',
-              }}
-            >
-              <img alt="UMKC" src={umkcLogo} />
-            </Typography>
+  variant="h6"
+  noWrap
+  component="a"
+  href="/"
+  sx={{
+    mr: 2,
+    display: { xs: 'none', md: 'flex' },
+    fontFamily: 'monospace',
+    fontWeight: 700,
+    letterSpacing: '.3rem',
+    color: 'inherit',
+    backgroundColor: '#005293',
+    textDecoration: 'none',
+  }}
+>
+  <img
+    alt="UMKC"
+    src={umkcLogo}
+    style={{
+      height: '100%',
+      maxHeight: '40px',
+    }}
+  />
+</Typography>
+
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               {pages.map((page) => (
                 <Button
