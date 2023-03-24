@@ -32,6 +32,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import { Link } from 'react-router-dom';
+import umkcLogo from '../../src/assets/images/umkclogo.png';
 
 const pages = ['GTA Certification', 'Course Descriptions'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -97,7 +98,7 @@ const ExpandMore = styled((props) => {
 
 function ResponsiveAppBar() {
 
-const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const handleOpenNavMenu = (event) => {
@@ -120,110 +121,93 @@ const [anchorElNav, setAnchorElNav] = React.useState(null);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-  
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}style={{ backgroundColor: '#005293', color: 'white' }}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              backgroundColor: '#005293',
-              textDecoration: 'none',
-            }}
-          >
-            <img alt="UMKC" src="umkclogo.png"/>
-          </Typography>
+      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }} style={{ backgroundColor: '#005293', color: 'white' }}>
+        <Container maxWidth="xl">
+          <Toolbar disableGutters>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-              
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none',
-            }}
-          >
-            <img alt="UMKC" src="umkclogo.png"/>
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+
+            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+
               >
-                {page}
-              </Button>
-            ))}
-          </Box>
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorElNav}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'left',
+                }}
+                open={Boolean(anchorElNav)}
+                onClose={handleCloseNavMenu}
+                sx={{
+                  display: { xs: 'block', md: 'none' },
+                }}
+              >
+                {pages.map((page) => (
+                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page}</Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              href="/"
+              sx={{
+                mr: 2,
+                display: { xs: 'none', md: 'flex' },
+                fontFamily: 'monospace',
+                fontWeight: 700,
+                letterSpacing: '.3rem',
+                color: 'inherit',
+                backgroundColor: '#005293',
+                textDecoration: 'none',
+              }}
+            >
+              <img alt="UMKC" src={umkcLogo} />
+            </Typography>
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+              {pages.map((page) => (
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: 'white', display: 'block' }}
+                >
+                  {page}
+                </Button>
+              ))}
+            </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-          <Button 
-            //color='inherit'
-            style={{ backgroundColor: '#005293', color: 'white' }}
-            component={Link} to="/signin"
-            >Log In
-          </Button>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+            <Box sx={{ flexGrow: 0 }}>
+              <Button
+                //color='inherit'
+                style={{ backgroundColor: '#005293', color: 'white' }}
+                component={Link} to="/signin"
+              >Log In
+              </Button>
+            </Box>
+          </Toolbar>
+        </Container>
+      </AppBar>
       <Drawer
         variant="permanent"
         sx={{
@@ -234,77 +218,77 @@ const [anchorElNav, setAnchorElNav] = React.useState(null);
       >
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
-        <List sx={style} component="nav" aria-label="mailbox folders">
-          <ListItem>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
-          </ListItem>
-          <Divider/>
-      <ListItem button>
-        <ListItemText primary="Degree" />
-      </ListItem>
-      <Divider />
-      <ListItem button>
-        <ListItemText primary="Graduating Semester" />
-      </ListItem>
-      <Divider />
-      <ListItem button divider>
-        <ListItemText primary="Graduating Position" />
-      </ListItem>
-      <ListItem button>
-        <ListItemText primary="Class" />
-      </ListItem>
-      <Divider />
-      <ListItem button>
-        <ListItemText primary="GTA Certification" />
-      </ListItem>
-      <Divider />
-    </List>
+          <List sx={style} component="nav" aria-label="mailbox folders">
+            <ListItem>
+              <Search>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  placeholder="Search…"
+                  inputProps={{ 'aria-label': 'search' }}
+                />
+              </Search>
+            </ListItem>
+            <Divider />
+            <ListItem button>
+              <ListItemText primary="Degree" />
+            </ListItem>
+            <Divider />
+            <ListItem button>
+              <ListItemText primary="Graduating Semester" />
+            </ListItem>
+            <Divider />
+            <ListItem button divider>
+              <ListItemText primary="Graduating Position" />
+            </ListItem>
+            <ListItem button>
+              <ListItemText primary="Class" />
+            </ListItem>
+            <Divider />
+            <ListItem button>
+              <ListItemText primary="GTA Certification" />
+            </ListItem>
+            <Divider />
+          </List>
         </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
         <Card sx={{ maxWidth: 345 }}>
-      <CardHeader
-        
-        title="CS 101 Grader"
-      />
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography paragraph>
-            <ul>
-              <li>Undergraduates: You may only apply to be a grader for a course you have taken at UMKC.</li>            
-              <li>Master’s Students: You may only apply to be a grader for undergraduate courses you took during your, previous, course of study. You may only apply to grade for graduate-level classes you have taken at UMKC (and received a satisfactory grade of an A,  A- or B+).</li>
-              <li>PhD Students: You may be considered as a grader for any class, based on feedback from your advisor</li>
-            </ul>
-            <Button>Apply</Button>
-          </Typography>
-        </CardContent>
-      </Collapse>
-    </Card>
+          <CardHeader
+
+            title="CS 101 Grader"
+          />
+          <CardActions disableSpacing>
+            <IconButton aria-label="add to favorites">
+              <FavoriteIcon />
+            </IconButton>
+            <IconButton aria-label="share">
+              <ShareIcon />
+            </IconButton>
+            <ExpandMore
+              expand={expanded}
+              onClick={handleExpandClick}
+              aria-expanded={expanded}
+              aria-label="show more"
+            >
+              <ExpandMoreIcon />
+            </ExpandMore>
+          </CardActions>
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <CardContent>
+              <Typography paragraph>
+                <ul>
+                  <li>Undergraduates: You may only apply to be a grader for a course you have taken at UMKC.</li>
+                  <li>Master’s Students: You may only apply to be a grader for undergraduate courses you took during your, previous, course of study. You may only apply to grade for graduate-level classes you have taken at UMKC (and received a satisfactory grade of an A,  A- or B+).</li>
+                  <li>PhD Students: You may be considered as a grader for any class, based on feedback from your advisor</li>
+                </ul>
+                <Button>Apply</Button>
+              </Typography>
+            </CardContent>
+          </Collapse>
+        </Card>
       </Box>
     </Box>
   );
