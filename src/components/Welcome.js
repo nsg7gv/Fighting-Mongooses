@@ -31,6 +31,7 @@ import CardContent from '@mui/material/CardContent';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
+import { Link } from 'react-router-dom';
 
 const pages = ['GTA Certification', 'Course Descriptions'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -123,7 +124,7 @@ const [anchorElNav, setAnchorElNav] = React.useState(null);
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}style={{ backgroundColor: '#005293', color: 'white' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -138,6 +139,7 @@ const [anchorElNav, setAnchorElNav] = React.useState(null);
               fontWeight: 700,
               letterSpacing: '.3rem',
               color: 'inherit',
+              backgroundColor: '#005293',
               textDecoration: 'none',
             }}
           >
@@ -152,6 +154,7 @@ const [anchorElNav, setAnchorElNav] = React.useState(null);
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
+              
             >
               <MenuIcon />
             </IconButton>
@@ -211,7 +214,12 @@ const [anchorElNav, setAnchorElNav] = React.useState(null);
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-          <Button color="inherit">Sign In</Button>
+          <Button 
+            //color='inherit'
+            style={{ backgroundColor: '#005293', color: 'white' }}
+            component={Link} to="/signin"
+            >Log In
+          </Button>
           </Box>
         </Toolbar>
       </Container>
