@@ -91,4 +91,10 @@
     border: 1px solid black;
     padding: 1rem;
   }
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  
   
