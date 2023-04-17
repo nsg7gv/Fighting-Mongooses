@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useHistory } from "react-router"; // Add this import
+import { AuthContext } from "./userInfo";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -76,6 +79,7 @@ const useStyles = makeStyles(theme => ({
 
 const SignInSide = () => {
   const classes = useStyles();
+  const history = useHistory(); // Add this line
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -83,51 +87,54 @@ const SignInSide = () => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
 
+  const { setUser } = useContext(AuthContext);
+
   const signIn = async (event) => {
     event.preventDefault();
-  
+
+    const auth = getAuth();
+
     try {
+      await signInWithEmailAndPassword(auth, email, password);
+
       const userQuery = query(collection(db, "profile"), where("Email", "==", email));
       const querySnapshot = await getDocs(userQuery);
       let userData = null;
-  
+
       querySnapshot.forEach((doc) => {
         userData = doc.data();
       });
-  
+
       if (userData) {
-        if (password === userData.Password) {
-          console.log("User signed in:", userData);
-          setLoggedIn(true);
-          setShowConfirmation(true); // Show the confirmation message
-  
-          // Hide the confirmation message after 3 seconds
-          setTimeout(() => {
-            setShowConfirmation(false);
-          }, 3000);
-        } else {
-          setError("Invalid email or password");
-          setShowErrorPopup(true); // Show the error popup
-  
-          // Hide the error popup after 3 seconds
-          setTimeout(() => {
-            setShowErrorPopup(false);
-          }, 3000);
-        }
-      } else {
-        setError("Invalid email or password");
-        setShowErrorPopup(true); // Show the error popup
-  
-        // Hide the error popup after 3 seconds
+        console.log("User signed in:", userData);
+        setLoggedIn(true);
+        setShowConfirmation(true); // Show the confirmation message
+
+        // Hide the confirmation message after 3 seconds
         setTimeout(() => {
-          setShowErrorPopup(false);
+          setShowConfirmation(false);
         }, 3000);
+
+        // Set user data in the AuthContext
+        setUser(userData);
+
+        // Redirect to the welcome page
+        history.push("/");
       }
     } catch (error) {
       setError(error.message);
       console.error("Error signing in:", error);
+      setShowErrorPopup(true); // Show the error popup
+
+      // Hide the error popup after 3 seconds
+      setTimeout(() => {
+        setShowErrorPopup(false);
+      }, 3000);
     }
   };
+  
+
+  
 
   
   const handleEmailChange = (event) => {
