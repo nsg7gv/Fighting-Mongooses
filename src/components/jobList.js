@@ -47,13 +47,14 @@ const JobList = ({ jobs, users, showPopup, setShowPopup }) => (
                       <TableCell>{job.NumPositions}</TableCell>
                       <TableCell>{job.State}</TableCell>
                       <TableCell>
-                      <Button
-                        variant="contained"
-                        style={{ backgroundColor: '#005293', color: 'white' }}
-                        onClick={() => setShowPopup(true)}
-                      >
-                        Applicants
-                      </Button>
+                        <Button
+                          variant="contained"
+                          style={{ backgroundColor: '#005293', color: 'white', width: '100%' }}
+                          onClick={() => setShowPopup(true)}
+                        >
+                          Applicants
+                        </Button>
+
 
                         {users.map((user) => (
                           <div key={user.id}>

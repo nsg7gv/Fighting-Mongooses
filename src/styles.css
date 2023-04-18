@@ -67,8 +67,8 @@
     padding: 12px 24px;
     border-radius: 4px;
     background-color: #005293;
+    font-size:inherit;
     color: #fff;
-    font-size: 16px;
     cursor: pointer;
     border-width: 5px;
     border: black;
@@ -82,19 +82,11 @@
     transform: translateY(-2px);
   }
   
-  .popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    border: 1px solid black;
-    padding: 1rem;
-  }
   body {
     margin: 0;
     padding: 0;
   }
+  
   
   
   
