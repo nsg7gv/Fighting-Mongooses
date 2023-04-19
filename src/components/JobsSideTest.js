@@ -45,30 +45,6 @@ function JobsSide() {
     setJobs(data.docs.map((elem) => ({ ...elem.data(), id: elem.id })));
   };
 
-  /* This function may need to be used to find applicants to a specific job
-  useEffect(() => {
-    async function fetchUserProfiles() {
-      const userProfiles = await getUserProfiles();
-      setUsers(userProfiles);
-    }
-    fetchUserProfiles();
-  }, []);
-
-  const getUserProfiles = async () => {
-    try {
-      const userProfilesCollectionRef = collection(db, 'profile');
-      const querySnapshot = await getDocs(userProfilesCollectionRef);
-      const userProfiles = [];
-      querySnapshot.forEach((doc) => {
-        userProfiles.push({ id: doc.id, ...doc.data() });
-      });
-      return userProfiles;
-    } catch (error) {
-      console.error('Error retrieving user profiles: ', error);
-      return null;
-    }
-  }*/
-
   // Add a new job to Firestore
   const createJob = async () => {
     try {
