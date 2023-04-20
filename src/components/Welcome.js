@@ -96,8 +96,9 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-function ResponsiveAppBar() {
+function ResponsiveAppBar(props) {
 
+  const { isLoggedIn } = props; // get isLoggedIn from props
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -206,13 +207,25 @@ function ResponsiveAppBar() {
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-              <Button
-                //color='inherit'
-                style={{ backgroundColor: '#005293', color: 'white' }}
-                component={Link} to="/signin"
-              >Log In
-              </Button>
-            </Box>
+            <Button
+  style={{ backgroundColor: '#005293', color: 'white', marginRight: '16px', visibility: isLoggedIn ? 'visible' : 'hidden'  }}
+  component={Link} to="/admin"
+  disabled={!isLoggedIn} // add this line
+  
+>
+  Admin
+</Button>
+
+  <Button
+    //color='inherit'
+    style={{ backgroundColor: '#005293', color: 'white' }}
+    component={Link} to="/signin"
+  >
+    Log In
+  </Button>
+</Box>
+
+
           </Toolbar>
         </Container>
       </AppBar>

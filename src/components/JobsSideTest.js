@@ -14,6 +14,7 @@ function JobsSide() {
   const [type, setType] = useState("");
   const [numPositions, setNumPosition] = useState("");
   const [state, setState] = useState("");
+  
 
   //popup card 
   const [users, setUsers] = useState([]);
