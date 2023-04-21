@@ -1,5 +1,7 @@
 import React, { useState, useContext } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import UserContext from "./UserContext"; // Import UserContext instead of AuthContext
+
 import { AuthContext } from "./userInfo";
 import { useNavigate } from 'react-router-dom';
 import Avatar from "@material-ui/core/Avatar";
@@ -82,14 +84,12 @@ const SignInSide = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const [loggedIn, setLoggedIn] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
 
   const navigate = useNavigate();
 
-
-  const { setUser } = useContext(AuthContext);
+  const { setUser } = useContext(UserContext); // Use UserContext here
 
     const signIn = async (event) => {
       event.preventDefault();
@@ -109,7 +109,6 @@ const SignInSide = () => {
     
         if (userData) {
           console.log("User signed in:", userData);
-          setLoggedIn(true);
           setShowConfirmation(true); // Show the confirmation message
 
           navigate('/');

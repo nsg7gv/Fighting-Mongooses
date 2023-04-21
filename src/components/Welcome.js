@@ -31,8 +31,11 @@ import CardContent from '@mui/material/CardContent';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import umkcLogo from '../../src/assets/images/umkclogo.png';
+import { useContext } from 'react';
+import UserContext from './UserContext';
+
 
 const pages = ['GTA Certification', 'Course Descriptions'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
@@ -98,9 +101,15 @@ const ExpandMore = styled((props) => {
 
 function ResponsiveAppBar(props) {
 
-  const { isLoggedIn } = props; // get isLoggedIn from props
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
+
+const handleAdminClick = () => {
+  navigate('/admin');
+};
+
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -207,22 +216,38 @@ function ResponsiveAppBar(props) {
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-            <Button
-  style={{ backgroundColor: '#005293', color: 'white', marginRight: '16px', visibility: isLoggedIn ? 'visible' : 'hidden'  }}
-  component={Link} to="/admin"
-  disabled={!isLoggedIn} // add this line
-  
->
-  Admin
-</Button>
+            {user && user.IsAdmin && (
+  <Button onClick={handleAdminClick} style={{ backgroundColor: '#005293', color: 'white' }}>
+    Admin
+  </Button>
+)}
 
+
+
+
+
+{!user && (
   <Button
     //color='inherit'
     style={{ backgroundColor: '#005293', color: 'white' }}
-    component={Link} to="/signin"
+    component={Link}
+    to="/signin"
   >
     Log In
   </Button>
+)}
+
+{user && (
+  <Button
+    //color='inherit'
+    style={{ backgroundColor: '#005293', color: 'white' }}
+    component={Link}
+    to="/signup"
+  >
+    Log out
+  </Button>
+)}
+
 </Box>
 
 
