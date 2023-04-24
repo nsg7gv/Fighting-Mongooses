@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react';
 import { db } from '../firebase';
 import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore"
 import { Typography, Container, Grid, Card, CardActions, CardContent, TextField, CssBaseline, Divider, Button, Popover, PaperProps } from "@material-ui/core";
-import { dbStorage } from '../firebase';
-import { ref, uploadBytes } from "firebase/storage";
 
 const getOptions = () => {
     return [
@@ -436,27 +434,6 @@ const handleChangeYear = async (event) => {
             console.log('Error getting document:', error);
         });
     }, []);
-
-    const[transcript, setTranscript] = useState(null)
-    const[GTACert, setGTACert] = useState(null)
-
-    const uploadTranscript = () => {
-        console.log('working')
-        if (transcript == null) return;
-        const transcriptRef = ref(dbStorage, `transcripts/${data.LName + '_transcript'}`)
-        uploadBytes(transcriptRef, transcript).then(() => {
-            alert('Upload Complete');
-        })
-    };
-
-    const uploadGTACert = () => {
-        console.log('working')
-        if (GTACert == null) return;
-        const gtacertRef = ref(dbStorage, `gtacert/${data.LName + '_gtacert'}`)
-        uploadBytes(gtacertRef, GTACert).then(() => {
-            alert('Upload Complete');
-        })
-    };
 
   return (
     <>
@@ -1157,33 +1134,30 @@ const handleChangeYear = async (event) => {
 </div>
 </Container>
 
-    <br></br>
-    <br></br>
+                <br></br>
+                <br></br>
 
-    <Container maxWidth='lg'>
-        <Typography variant='h4' align='center' color='textprimary' gutterBottom='true'>
-            Files:
-        </Typography>
-        <Divider variant='inset' />
-        <Grid container spacing={5} justifyContent='center' columns={5} direction='column'>
-            <Grid item>
-                <Typography variant='p' align='center' color='textSecondary' paragraph>
-                    <p>Transcript: </p>
-                    <input type="file" onChange={(event) => {setTranscript(event.target.files[0])}}/>
-                    <Button variant="contained" onClick={uploadTranscript}>Upload</Button>
-                </Typography>
-            </Grid>
+                <Container maxWidth='lg'>
+                    <Typography variant='h4' align='center' color='textprimary' gutterBottom='true'>
+                        Files:
+                    </Typography>
+                    <Divider variant='inset' />
+                    <Grid container spacing={5} justifyContent='center' columns={5} direction='column'>
+                        <Grid item>
+                            <Typography variant='p' align='center' color='textSecondary' paragraph>
+                                <p>Transcript: </p>
+                                <Button variant="contained">Upload Transcript</Button>
+                            </Typography>
+                        </Grid>
 
-            <Grid item>
-                <Typography variant='p' align='center' color='textSecondary' paragraph>
-                    <p>GTA Certification:</p>
-                    <input type="file" onChange={(event) => {setGTACert(event.target.files[0])}}/>
-                    <Button variant="contained" onClick={uploadGTACert}>Upload</Button>
-                </Typography>
-            </Grid>
+                        <Grid item>
+                            <Typography variant='p' align='center' color='textSecondary' paragraph>
+                                <p>GTA Certification:</p>
+                            </Typography>
+                        </Grid>
 
-        </Grid>
-    </Container>
+                    </Grid>
+                </Container>
             </div>
         </main>
 

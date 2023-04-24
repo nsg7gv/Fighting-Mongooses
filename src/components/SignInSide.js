@@ -1,4 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import UserContext from "./UserContext"; // Import UserContext instead of AuthContext
+
+import { AuthContext } from "./userInfo";
+import { useNavigate } from 'react-router-dom';
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -79,55 +84,58 @@ const SignInSide = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const [loggedIn, setLoggedIn] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [showErrorPopup, setShowErrorPopup] = useState(false);
 
-  const signIn = async (event) => {
-    event.preventDefault();
-  
-    try {
-      const userQuery = query(collection(db, "profile"), where("Email", "==", email));
-      const querySnapshot = await getDocs(userQuery);
-      let userData = null;
-  
-      querySnapshot.forEach((doc) => {
-        userData = doc.data();
-      });
-  
-      if (userData) {
-        if (password === userData.Password) {
+  const navigate = useNavigate();
+
+  const { setUser } = useContext(UserContext); // Use UserContext here
+
+    const signIn = async (event) => {
+      event.preventDefault();
+
+      const auth = getAuth();
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+
+        const userQuery = query(collection(db, "profile"), where("Email", "==", email));
+        const querySnapshot = await getDocs(userQuery);
+        let userData = null;
+    
+        querySnapshot.forEach((doc) => {
+          userData = doc.data();
+        });
+    
+        if (userData) {
           console.log("User signed in:", userData);
-          setLoggedIn(true);
           setShowConfirmation(true); // Show the confirmation message
-  
+
+          navigate('/');
+
+    
           // Hide the confirmation message after 3 seconds
           setTimeout(() => {
             setShowConfirmation(false);
           }, 3000);
-        } else {
-          setError("Invalid email or password");
-          setShowErrorPopup(true); // Show the error popup
-  
-          // Hide the error popup after 3 seconds
-          setTimeout(() => {
-            setShowErrorPopup(false);
-          }, 3000);
+          
+          // Set user data in the AuthContext
+          setUser(userData);
         }
-      } else {
-        setError("Invalid email or password");
+      } catch (error) {
+        setError(error.message);
+        console.error("Error signing in:", error);
         setShowErrorPopup(true); // Show the error popup
-  
+
         // Hide the error popup after 3 seconds
         setTimeout(() => {
           setShowErrorPopup(false);
         }, 3000);
       }
-    } catch (error) {
-      setError(error.message);
-      console.error("Error signing in:", error);
-    }
-  };
+    };
+  
+
+  
 
   
   const handleEmailChange = (event) => {
@@ -195,11 +203,6 @@ const SignInSide = () => {
               Sign In
             </Button>
             <Grid container>
-              <Grid item xs>
-                {/* <Link href="#" variant="body2">
-                  Forgot password?
-                </Link> */}
-              </Grid>
               <Grid item>
                 <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
