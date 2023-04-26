@@ -1,8 +1,6 @@
 import React, { useState, useContext } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import UserContext from "./UserContext"; // Import UserContext instead of AuthContext
-
-import { AuthContext } from "./userInfo";
 import { useNavigate } from 'react-router-dom';
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
