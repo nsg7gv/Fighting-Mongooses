@@ -1,42 +1,43 @@
-import React, { useContext, useState } from 'react';
+import * as React from 'react';
+import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import { red } from '@mui/material/colors';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShareIcon from '@mui/icons-material/Share';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Drawer from '@mui/material/Drawer';
+import CssBaseline from '@mui/material/CssBaseline';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import List from '@mui/material/List';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import SearchIcon from '@mui/icons-material/Search';
+import { styled, alpha } from '@mui/material/styles';
+import InputBase from '@mui/material/InputBase';
 import { Link, useNavigate } from 'react-router-dom';
+import umkcLogo from '../../src/assets/images/umkclogo.png';
+import { useContext } from 'react';
 import UserContext from './UserContext';
 import NestedList from './nestedList';
 import JobCard from './card';
-import umkcLogo from '../../src/assets/images/umkclogo.png';
-import {
-  AppBar,
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Container,
-  CssBaseline,
-  Divider,
-  Drawer,
-  ExpandMore as ExpandMoreIcon,
-  IconButton,
-  InputBase,
-  List,
-  ListItem,
-  ListItemText,
-  Menu,
-  MenuItem,
-  MoreVert as MoreVertIcon,
-  Search as SearchIcon,
-  styled,
-  Toolbar,
-  Tooltip,
-  Typography,
-} from '@mui/material';
-import { alpha } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
-import MenuIcon from '@mui/icons-material/Menu';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
+
 
 const pages = ['GTA Certification', 'Course Descriptions'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
