@@ -35,6 +35,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import umkcLogo from '../../src/assets/images/umkclogo.png';
 import { useContext } from 'react';
 import UserContext from './UserContext';
+import NestedList from './nestedList';
+import JobCard from './card';
 
 
 const pages = ['GTA Certification', 'Course Descriptions'];
@@ -171,10 +173,26 @@ const handleAdminClick = () => {
                 }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                  <MenuItem key={page} onClick={handleCloseNavMenu} component={Link} to="https://catalog.umkc.edu/course-offerings/">
                     <Typography textAlign="center">{page}</Typography>
                   </MenuItem>
                 ))}
+                <Box sx={{ flexGrow: 0 }}>
+                  <Button
+                    //color='inherit'
+                    style={{ backgroundColor: '#005293', color: 'white' }}
+                    component={Link} to="https://catalog.umkc.edu/general-graduate-academic-regulations-information/international-graduate-student-academic-regulations/"
+                  >GTA Certification
+                  </Button>
+              </Box>
+              <Box sx={{ flexGrow: 0 }}>
+                  <Button
+                    //color='inherit'
+                    style={{ backgroundColor: '#005293', color: 'white' }}
+                    component={Link} to="https://catalog.umkc.edu/course-offerings/"
+                  >Course Descriptions
+                  </Button>
+              </Box>
               </Menu>
             </Box>
             <Typography
@@ -203,19 +221,23 @@ const handleAdminClick = () => {
   />
 </Typography>
 
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              {pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
-                >
-                  {page}
-                </Button>
-              ))}
-            </Box>
+            
+              <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+                  <Button
+                    //color='inherit'
+                    style={{ backgroundColor: '#005293', color: 'white' }}
+                    component={Link} to="https://catalog.umkc.edu/general-graduate-academic-regulations-information/international-graduate-student-academic-regulations/"
+                  >GTA Certification
+                  </Button>
+                  <Button
+                    //color='inherit'
+                    style={{ backgroundColor: '#005293', color: 'white' }}
+                    component={Link} to="https://catalog.umkc.edu/course-offerings/"
+                  >Course Descriptions
+                  </Button>
+              </Box>
 
-            <Box sx={{ flexGrow: 0 }}>
+              <Box sx={{ flexGrow: 0 }}>
             {user && user.IsAdmin && (
   <Button onClick={handleAdminClick} style={{ backgroundColor: '#005293', color: 'white' }}>
     Admin
@@ -249,8 +271,6 @@ const handleAdminClick = () => {
 )}
 
 </Box>
-
-
           </Toolbar>
         </Container>
       </AppBar>
@@ -264,77 +284,12 @@ const handleAdminClick = () => {
       >
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
-          <List sx={style} component="nav" aria-label="mailbox folders">
-            <ListItem>
-              <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search…"
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </Search>
-            </ListItem>
-            <Divider />
-            <ListItem button>
-              <ListItemText primary="Degree" />
-            </ListItem>
-            <Divider />
-            <ListItem button>
-              <ListItemText primary="Graduating Semester" />
-            </ListItem>
-            <Divider />
-            <ListItem button divider>
-              <ListItemText primary="Graduating Position" />
-            </ListItem>
-            <ListItem button>
-              <ListItemText primary="Class" />
-            </ListItem>
-            <Divider />
-            <ListItem button>
-              <ListItemText primary="GTA Certification" />
-            </ListItem>
-            <Divider />
-          </List>
+          <NestedList/>
         </Box>
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
-        <Card sx={{ maxWidth: 345 }}>
-          <CardHeader
-
-            title="CS 101 Grader"
-          />
-          <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites">
-              <FavoriteIcon />
-            </IconButton>
-            <IconButton aria-label="share">
-              <ShareIcon />
-            </IconButton>
-            <ExpandMore
-              expand={expanded}
-              onClick={handleExpandClick}
-              aria-expanded={expanded}
-              aria-label="show more"
-            >
-              <ExpandMoreIcon />
-            </ExpandMore>
-          </CardActions>
-          <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <CardContent>
-              <Typography paragraph>
-                <ul>
-                  <li>Undergraduates: You may only apply to be a grader for a course you have taken at UMKC.</li>
-                  <li>Master’s Students: You may only apply to be a grader for undergraduate courses you took during your, previous, course of study. You may only apply to grade for graduate-level classes you have taken at UMKC (and received a satisfactory grade of an A,  A- or B+).</li>
-                  <li>PhD Students: You may be considered as a grader for any class, based on feedback from your advisor</li>
-                </ul>
-                <Button>Apply</Button>
-              </Typography>
-            </CardContent>
-          </Collapse>
-        </Card>
+        <JobCard/>
       </Box>
     </Box>
   );
