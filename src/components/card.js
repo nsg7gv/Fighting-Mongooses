@@ -13,11 +13,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
 import UserContext from './UserContext';
 import { useNavigate } from 'react-router-dom';
-import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import { DialogContentText } from '@mui/material';
+import { doc, updateDoc, setDoc } from 'firebase/firestore';
 import { db } from './firebase-config';
-import { collection, doc, updateDoc, FieldValue } from 'firebase/firestore';
-
 
 
 const ExpandMore = styled((props) => {
@@ -34,7 +31,6 @@ const ExpandMore = styled((props) => {
 export default function JobCard(props) {
   const { job } = props;
   const [expanded, setExpanded] = React.useState(false);
-  const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
   const { user } = React.useContext(UserContext);
   const navigate = useNavigate();
 
@@ -42,39 +38,34 @@ export default function JobCard(props) {
     setExpanded(!expanded);
   };
 
-  const handleApplyClick = () => {
+  const handleApplyClick = async () => {
     if (user) {
-      setConfirmDialogOpen(true);
+      if (window.confirm('Are you sure you want to apply for this position?')) {
+        try {
+          // Update the Firestore database
+          const courseDocRef = doc(db, 'application', job.Courseid);
+          await setDoc(courseDocRef, {
+            [user.Email]: true,
+          }, { merge: true });
+          // Notify the user that their application was successful
+          alert('Your application was successful!');
+        } catch (error) {
+          console.error('Error updating Firestore document:', error);
+          // Notify the user that there was an error
+          alert('There was an error submitting your application. Please try again later.');
+        }
+      }
     } else {
       // user is not logged in, redirect to signup page
       navigate('/signup');
     }
   };
+  
 
-  const handleConfirmDialogClose = async (confirm) => {
-    setConfirmDialogOpen(false);
-    if (confirm) {
-      try {
-        const applicationRef = collection(db, 'application');
-        const courseRef = doc(applicationRef, job.Courseid);
-  
-        await updateDoc(courseRef, {
-          UMsysID: FieldValue.arrayUnion(user.email),
-        });
-  
-        alert('Your application has been submitted successfully!');
-      } catch (error) {
-        alert('An error occurred while submitting your application. Please try again later.');
-        console.error(error);
-      }
-    }
-  };
   
   
   
-  
-  
-  
+
   
   
 
@@ -110,25 +101,9 @@ export default function JobCard(props) {
               <li>PhD Students: You may be considered as a grader for any class, based on feedback from your advisor.</li>
             </ul>
             <Button onClick={handleApplyClick}>Apply</Button>
-            {user && (
-              <Dialog open={confirmDialogOpen} onClose={() => handleConfirmDialogClose(false)}>
-                <DialogTitle>Confirm Application</DialogTitle>
-                <DialogContent>
-                  <DialogContentText>
-                    Are you sure you want to apply for this position?
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={() => handleConfirmDialogClose(false)}>Cancel</Button>
-                  <Button onClick={() => handleConfirmDialogClose(true)} autoFocus>
-                    Apply
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            )}
           </Typography>
         </CardContent>
       </Collapse>
     </Card>
   );
-            }  
+}
