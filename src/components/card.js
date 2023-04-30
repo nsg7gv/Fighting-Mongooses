@@ -23,7 +23,8 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-export default function JobCard() {
+export default function JobCard(props) {
+  const { job } = props;
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -32,38 +33,40 @@ export default function JobCard() {
 
   return (
     <Card sx={{ maxWidth: 345 }}>
-          <CardHeader
-
-            title="CS 101 Grader"
-          />
-          <CardActions disableSpacing>
-            <IconButton aria-label="add to favorites">
-              <FavoriteIcon />
-            </IconButton>
-            <IconButton aria-label="share">
-              <ShareIcon />
-            </IconButton>
-            <ExpandMore
-              expand={expanded}
-              onClick={handleExpandClick}
-              aria-expanded={expanded}
-              aria-label="show more"
-            >
-              <ExpandMoreIcon />
-            </ExpandMore>
-          </CardActions>
-          <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <CardContent>
-              <Typography paragraph>
-                <ul>
-                  <li>Undergraduates: You may only apply to be a grader for a course you have taken at UMKC.</li>
-                  <li>Master’s Students: You may only apply to be a grader for undergraduate courses you took during your, previous, course of study. You may only apply to grade for graduate-level classes you have taken at UMKC (and received a satisfactory grade of an A,  A- or B+).</li>
-                  <li>PhD Students: You may be considered as a grader for any class, based on feedback from your advisor</li>
-                </ul>
-                <Button>Apply</Button>
-              </Typography>
-            </CardContent>
-          </Collapse>
-        </Card>
+      <CardHeader title={job.Courseid} />
+      <CardActions disableSpacing>
+        <IconButton aria-label="add to favorites">
+          <FavoriteIcon />
+        </IconButton>
+        <IconButton aria-label="share">
+          <ShareIcon />
+        </IconButton>
+        <ExpandMore
+          expand={expanded}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label="show more"
+        >
+          <ExpandMoreIcon />
+        </ExpandMore>
+      </CardActions>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent>
+          <Typography paragraph>
+            <ul>
+              <li>{job.Courseid}</li>
+              <li>Term: {job.Term}</li>
+              <li>Type: {job.Type}</li>
+              <li>Number of Positions Available: {job.NumPositions}</li>
+              <li>Undergraduates: You may only apply to be a grader for a course you have taken at UMKC.</li>
+              <li>Master’s Students: You may only apply to be a grader for undergraduate courses you took during your, previous, course of study. You may only apply to grade for graduate-level classes you have taken at UMKC (and received a satisfactory grade of an A,  A- or B+).</li>
+              <li>PhD Students: You may be considered as a grader for any class, based on feedback from your advisor.</li>
+            </ul>
+            <Button>Apply</Button>
+          </Typography>
+        </CardContent>
+      </Collapse>
+    </Card>
   );
 }
+

@@ -37,6 +37,14 @@ import { useContext } from 'react';
 import UserContext from './UserContext';
 import NestedList from './nestedList';
 import JobCard from './card';
+import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore";
+
+import { useState, useEffect } from 'react';
+import { db } from "./firebase-config";
+import Grid from '@mui/material/Grid';
+
+
+
 
 
 const pages = ['GTA Certification', 'Course Descriptions'];
@@ -107,6 +115,25 @@ function ResponsiveAppBar(props) {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
+  const [jobData, setJobData] = useState([]);
+  const JobCollectionRef = collection(db, "backenddata");
+  const [jobs, setJobs] = useState([]);
+  const [courseID, setCourseID] = useState("");
+  const [term, setTerm] = useState("");
+  const [type, setType] = useState("");
+  const [numPositions, setNumPosition] = useState("");
+  const [state, setState] = useState("");
+
+  // Use the useEffect hook to fetch data from Firestore when the component mounts
+  useEffect(() => {
+    getJobData();
+  }, []);
+
+  // Fetch data from Firestore and update the state variable "jobs"
+  const getJobData = async () => {
+    const data = await getDocs(JobCollectionRef);
+    setJobData(data.docs.map((elem) => ({ ...elem.data(), id: elem.id })));
+  };
 
 const handleAdminClick = () => {
   navigate('/admin');
@@ -287,11 +314,18 @@ const handleAdminClick = () => {
           <NestedList/>
         </Box>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Toolbar />
-        <JobCard/>
-      </Box>
-    </Box>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, pt: 12 }}>
+
+  <Grid container spacing={2}>
+    {jobData.map((job) => (
+      <Grid item key={job.id} xs={12} sm={6} md={4}>
+        <JobCard job={job} />
+      </Grid>
+    ))}
+  </Grid>
+</Box>
+
+  </Box>
   );
 }
 export default ResponsiveAppBar;
