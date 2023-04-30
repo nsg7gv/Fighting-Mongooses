@@ -13,7 +13,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
 import UserContext from './UserContext';
 import { useNavigate } from 'react-router-dom';
-import { doc, updateDoc, setDoc } from 'firebase/firestore';
+import { doc, updateDoc, setDoc, getDoc} from 'firebase/firestore';
 import { db } from './firebase-config';
 
 
@@ -42,11 +42,20 @@ export default function JobCard(props) {
     if (user) {
       if (window.confirm('Are you sure you want to apply for this position?')) {
         try {
-          // Update the Firestore database
+          // Check if the user has already applied
           const courseDocRef = doc(db, 'application', job.Courseid);
+          const courseDoc = await getDoc(courseDocRef);
+          if (courseDoc.exists() && courseDoc.data()[user.Email]) {
+            // User has already applied, inform them and return
+            alert('You have already applied for this position.');
+            return;
+          }
+  
+          // Update the Firestore database
           await setDoc(courseDocRef, {
             [user.Email]: true,
           }, { merge: true });
+  
           // Notify the user that their application was successful
           alert('Your application was successful!');
         } catch (error) {
@@ -60,6 +69,7 @@ export default function JobCard(props) {
       navigate('/signup');
     }
   };
+  
   
 
   
