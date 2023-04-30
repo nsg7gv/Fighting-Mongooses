@@ -1,55 +1,20 @@
-import * as React from 'react';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import SearchIcon from '@mui/icons-material/Search';
-import { styled, alpha } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
+import React, { useState, useEffect, useContext } from 'react';
+import { collection, getDocs } from "firebase/firestore";
 import { Link, useNavigate } from 'react-router-dom';
+import { styled, alpha } from '@mui/material/styles';
+import { 
+  AppBar, Box, Button, Container, CssBaseline, Drawer, Grid, IconButton,
+  InputBase, MenuItem, Menu, Toolbar, Typography 
+} from '@mui/material';
+import { Menu as MenuIcon } from '@mui/icons-material';
 import umkcLogo from '../../src/assets/images/umkclogo.png';
-import { useContext } from 'react';
 import UserContext from './UserContext';
-import NestedList from './nestedList';
 import JobCard from './card';
-import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore";
-
-import { useState, useEffect } from 'react';
+import NestedList from './nestedList';
 import { db } from "./firebase-config";
-import Grid from '@mui/material/Grid';
-
-
-
-
 
 const pages = ['GTA Certification', 'Course Descriptions'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
 const drawerWidth = 240;
 
 const style = {
@@ -98,51 +63,31 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
-
 function ResponsiveAppBar(props) {
-
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const [jobData, setJobData] = useState([]);
   const JobCollectionRef = collection(db, "backenddata");
-  const [jobs, setJobs] = useState([]);
-  const [courseID, setCourseID] = useState("");
-  const [term, setTerm] = useState("");
-  const [type, setType] = useState("");
-  const [numPositions, setNumPosition] = useState("");
-  const [state, setState] = useState("");
 
-  // Use the useEffect hook to fetch data from Firestore when the component mounts
   useEffect(() => {
     getJobData();
   }, []);
 
-  // Fetch data from Firestore and update the state variable "jobs"
   const getJobData = async () => {
     const data = await getDocs(JobCollectionRef);
     setJobData(data.docs.map((elem) => ({ ...elem.data(), id: elem.id })));
   };
 
-const handleAdminClick = () => {
-  navigate('/admin');
-};
-
+  const handleAdminClick = () => {
+    navigate('/admin');
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -160,7 +105,6 @@ const handleAdminClick = () => {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
-
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
