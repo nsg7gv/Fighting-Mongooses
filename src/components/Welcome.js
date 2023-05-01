@@ -6,16 +6,15 @@ import {
   AppBar, Box, Button, Container, CssBaseline, Drawer, Grid, IconButton,
   InputBase, MenuItem, Menu, Toolbar, Typography 
 } from '@mui/material';
-import { Menu as MenuIcon } from '@mui/icons-material';
+import { Menu as MenuIcon, Person as PersonIcon } from '@mui/icons-material';
 import umkcLogo from '../../src/assets/images/umkclogo.png';
 import UserContext from './UserContext';
 import JobCard from './card';
 import NestedList from './nestedList';
 import { db } from "./firebase-config";
-
 const pages = ['GTA Certification', 'Course Descriptions'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const drawerWidth = 240;
+
 
 const style = {
   width: '100%',
@@ -105,6 +104,10 @@ function ResponsiveAppBar(props) {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+  const handleProfileClick = () => {
+    navigate('/profile');
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -238,6 +241,17 @@ function ResponsiveAppBar(props) {
     to="/signup"
   >
     Log out
+  </Button>
+)}
+{user && (
+  <Button
+    // color='inherit'
+    style={{ backgroundColor: '#005293', color: 'white' }}
+    startIcon={<PersonIcon />}
+    component={Link}
+    to="/profile"
+  >
+    Profile
   </Button>
 )}
 

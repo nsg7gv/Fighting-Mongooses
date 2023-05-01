@@ -75,17 +75,6 @@ export default function JobCard(props) {
     }
   };
   
-  
-  
-  
-
-  
-  
-  
-
-  
-  
-
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardHeader title={job.Courseid} />
@@ -108,11 +97,10 @@ export default function JobCard(props) {
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>
+            <Typography sx={{ fontWeight: 'bold', textAlign: 'left' }}>Term: </Typography>{job.Term}<br />
+            <Typography sx={{ fontWeight: 'bold', textAlign: 'left' }}>Type: </Typography>{job.Type}<br />
+            <Typography sx={{ fontWeight: 'bold', textAlign: 'left' }}>Number of Positions Available: </Typography>{job.NumPositions}<br />
             <ul>
-              <li>{job.Courseid}</li>
-              <li>Term: {job.Term}</li>
-              <li>Type: {job.Type}</li>
-              <li>Number of Positions Available: {job.NumPositions}</li>
               <li>Undergraduates: You may only apply to be a grader for a course you have taken at UMKC.</li>
               <li>Master’s Students: You may only apply to be a grader for undergraduate courses you took during your, previous, course of study. You may only apply to grade for graduate-level classes you have taken at UMKC (and received a satisfactory grade of an A,  A- or B+).</li>
               <li>PhD Students: You may be considered as a grader for any class, based on feedback from your advisor.</li>
@@ -123,4 +111,6 @@ export default function JobCard(props) {
       </Collapse>
     </Card>
   );
+  
+
 }
