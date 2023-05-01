@@ -544,7 +544,7 @@ useEffect(() => {
                     <Grid container spacing={5} justifyContent='center' columns={5}>
                         <Grid item>
                             <Typography variant='p' align='center' color='textSecondary' paragraph>
-                                <p>Student Name: {data.LName}, {data.FName}</p>
+                                <p>Student Name: {data.Lname}, {data.Fname}</p>
                                 <p>UMKC Email: {data.Email}</p>
                                 <p>Student ID: {data.IDnum}</p>
                                 <p>Major: {data.Major}</p>

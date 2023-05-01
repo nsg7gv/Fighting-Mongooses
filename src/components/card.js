@@ -31,6 +31,7 @@ const ExpandMore = styled((props) => {
 export default function JobCard(props) {
   const { job } = props;
   const [expanded, setExpanded] = React.useState(false);
+  const [isFavorite, setIsFavorite] = React.useState(false); // added state to hold the color of the icon
   const { user } = React.useContext(UserContext);
   const navigate = useNavigate();
 
@@ -74,26 +75,51 @@ export default function JobCard(props) {
       navigate('/signup');
     }
   };
+
+  // handle click of the favorite icon to toggle the color
+  const handleFavoriteClick = () => {
+    setIsFavorite(!isFavorite);
+  };
+  const handleShareClick = (event) => {
+    event.stopPropagation();
+  
+    const subject = 'Check out this job';
+    const body = `Hi,\n\nI thought you might be interested in this job:\n\n${job.Courseid}\n\n${job.Term}\n\n${job.Type}\n\n${job.NumPositions}\n\n`;
+  
+    const url = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  
+    // Open the default email client with the pre-populated email message
+    window.open(url, '_blank');
+  };
+  
+  
+  
   
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardHeader title={job.Courseid} />
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </ExpandMore>
-      </CardActions>
+  <IconButton
+    aria-label="add to favorites"
+    onClick={handleFavoriteClick}
+    sx={{ color: isFavorite ? 'red' : 'inherit' }} // set color based on isFavorite state
+  >
+    <FavoriteIcon />
+    <IconButton aria-label="share" onClick={(event) => handleShareClick(event)}>
+  <ShareIcon />
+</IconButton>
+</IconButton>
+
+  <ExpandMore
+    expand={expanded}
+    onClick={handleExpandClick}
+    aria-expanded={expanded}
+    aria-label="show more"
+  >
+    <ExpandMoreIcon />
+  </ExpandMore>
+</CardActions>
+
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography paragraph>

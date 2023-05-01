@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField, Grid, Typography, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
-
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from './firebase-config';
 
 const JobForm = ({ setCourseID, setTerm, setType, setNumPosition, setState, setDegree, setGradSemester, setClassType }) => {
   const [classTypeSelected, setClassTypeSelected] = useState(false);
@@ -16,6 +17,23 @@ const JobForm = ({ setCourseID, setTerm, setType, setNumPosition, setState, setD
     setDegreeSelected(event.target.value !== '');
     setDegree(event.target.value);
   }
+
+  const [applicants, setApplicants] = useState([]);
+
+  useEffect(() => {
+    const fetchApplicants = async () => {
+      const courseDocRef = doc(db, 'application', setCourseID);
+      const courseDoc = await getDoc(courseDocRef);
+
+      if (courseDoc.exists()) {
+        setApplicants(Object.keys(courseDoc.data()));
+      } else {
+        setApplicants([]);
+      }
+    };
+
+    fetchApplicants();
+  }, [setCourseID]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
