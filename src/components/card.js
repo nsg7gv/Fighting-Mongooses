@@ -57,9 +57,9 @@ export default function JobCard(props) {
           }
   
           // Update the Firestore database
-          await updateDoc(courseDocRef, {
+          await setDoc(courseDocRef, {
             [user.Email]: true,
-          });
+          }, { merge: true });
   
           // Notify the user that their application was successful
           alert('Your application was successful!');
@@ -74,6 +74,7 @@ export default function JobCard(props) {
       navigate('/signup');
     }
   };
+  
   
   
   
