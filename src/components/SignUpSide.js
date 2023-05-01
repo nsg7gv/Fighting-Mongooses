@@ -13,6 +13,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { db } from "./firebase-config";
 import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, where, setDoc } from "firebase/firestore";
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
 function Message() {
   return (
@@ -59,6 +60,7 @@ function SignUp() {
   
   // reference to the "profile" collection in Firestore
   const UserCollectionRef = collection(db, "profile");
+  const auth = getAuth();
 
   useEffect(() => {
     getUserData();
@@ -75,21 +77,26 @@ function SignUp() {
     try {
       // Query Firebase for documents that match the specified email
       const emailQuerySnapshot = await getDocs(
-        query(UserCollectionRef, where("email", "==", email))
+        query(UserCollectionRef, where("Email", "==", email))
       );
       if (emailQuerySnapshot.docs.length === 0) {
-        // Add a new document with the email as the document ID
+        // Create a new user in Firebase Authentication with the email and password
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+        // Add a new document to Firestore with the email as the document ID
         await setDoc(doc(UserCollectionRef, email), {
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
+          Fname: firstName,
+          Lname: lastName,
+          Email: email,
         });
+
+        // Reload the page after the new document has been added
         window.location.reload();
       } else {
         alert(`A user with email ${email} already exists.`);
       }
     } catch (error) {
-      console.error("Error creating document: ", error);
+      console.error("Error creating user: ", error);
     }
   };
   
@@ -99,14 +106,14 @@ function SignUp() {
   const checkUser = async () => {
     try {
       const emailQuerySnapshot = await getDocs(
-        query(UserCollectionRef, where("email", "==", email))
+        query(UserCollectionRef, where("Email", "==", email))
       );
       if (emailQuerySnapshot.docs.length === 0) {
         // Add a new document with the email as the document ID
         await setDoc(doc(UserCollectionRef, email), {
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
+          Fname: firstName,
+          Lname: lastName,
+          Email: email,
         });
 
         // Reload the page after the new document has been added
@@ -130,11 +137,11 @@ function SignUp() {
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="fname"
-                name="firstName"
+                name="Fname"
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
+                id="Fname"
                 label="First Name"
                 autoFocus
                 value={firstName}
@@ -144,11 +151,11 @@ function SignUp() {
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="lname"
-                name="lastName"
+                name="Lname"
                 variant="outlined"
                 required
                 fullWidth
-                id="lastName"
+                id="Lname"
                 label="Last Name"
                 value={lastName}
                 onChange={(event) => { setLastName(event.target.value) }}
@@ -157,11 +164,11 @@ function SignUp() {
             <Grid item xs={12}>
               <TextField
                 autoComplete="email"
-                name="email"
+                name="Email"
                 variant="outlined"
                 required
                 fullWidth
-                id="email"
+                id="Email"
                 label="Email Address"
                 value={email}
                 onChange={(event) => { setEmail(event.target.value) }}
