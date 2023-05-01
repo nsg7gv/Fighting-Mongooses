@@ -51,10 +51,15 @@ export default function JobCard(props) {
             return;
           }
   
+          // Create a new document if it doesn't exist
+          if (!courseDoc.exists()) {
+            await setDoc(courseDocRef, {});
+          }
+  
           // Update the Firestore database
-          await setDoc(courseDocRef, {
+          await updateDoc(courseDocRef, {
             [user.Email]: true,
-          }, { merge: true });
+          });
   
           // Notify the user that their application was successful
           alert('Your application was successful!');
@@ -69,6 +74,7 @@ export default function JobCard(props) {
       navigate('/signup');
     }
   };
+  
   
   
 
