@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useEffect, useState } from 'react';
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -11,6 +11,8 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { db } from "./firebase-config";
+import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, where, setDoc } from "firebase/firestore";
 
 function Message() {
   return (
@@ -34,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: '#296BBD'
+    backgroundColor: "#296BBD"
   },
   form: {
     width: "100%",
@@ -45,19 +47,85 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function SignUp() {
-  const classes = useStyles();
+function SignUp() {
 
+  const classes = useStyles();
+  // Define state variables to manage form input and job data
+  const [users, setUsers] = useState([]);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  
+  // reference to the "profile" collection in Firestore
+  const UserCollectionRef = collection(db, "profile");
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  // Fetch data from Firestore and update the state variable "jobs"
+  const getUserData = async () => {
+    const data = await getDocs(UserCollectionRef);
+    setUsers(data.docs.map((elem) => ({ ...elem.data(), id: elem.id })));
+  };
+
+  // Add a new job to Firestore
+  const createUser = async () => {
+    try {
+      // Query Firebase for documents that match the specified email
+      const emailQuerySnapshot = await getDocs(
+        query(UserCollectionRef, where("email", "==", email))
+      );
+      if (emailQuerySnapshot.docs.length === 0) {
+        // Add a new document with the email as the document ID
+        await setDoc(doc(UserCollectionRef, email), {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+        });
+        window.location.reload();
+      } else {
+        alert(`A user with email ${email} already exists.`);
+      }
+    } catch (error) {
+      console.error("Error creating document: ", error);
+    }
+  };
+  
+
+  // Check user
+  // Define an asynchronous function called "checkUser"
+  const checkUser = async () => {
+    try {
+      const emailQuerySnapshot = await getDocs(
+        query(UserCollectionRef, where("email", "==", email))
+      );
+      if (emailQuerySnapshot.docs.length === 0) {
+        // Add a new document with the email as the document ID
+        await setDoc(doc(UserCollectionRef, email), {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+        });
+
+        // Reload the page after the new document has been added
+        window.location.reload();
+      } else {
+        alert(`A user with email ${email} already exists.`);
+      }
+    } catch (error) {
+      console.error("Error creating document: ", error);
+    }
+  };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-        </Avatar>
+        <Avatar className={classes.avatar}></Avatar>
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -69,55 +137,57 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                value={firstName}
+                onChange={(event) => { setFirstName(event.target.value) }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
+                autoComplete="lname"
+                name="lastName"
                 variant="outlined"
                 required
                 fullWidth
                 id="lastName"
                 label="Last Name"
-                name="lastName"
-                autoComplete="lname"
+                value={lastName}
+                onChange={(event) => { setLastName(event.target.value) }}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
+                autoComplete="email"
+                name="email"
                 variant="outlined"
                 required
                 fullWidth
                 id="email"
                 label="Email Address"
-                name="email"
-                autoComplete="email"
+                value={email}
+                onChange={(event) => { setEmail(event.target.value) }}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
+                autoComplete="current-password"
+                name="password"
                 variant="outlined"
                 required
                 fullWidth
-                name="password"
-                label="Password"
                 type="password"
                 id="password"
-                autoComplete="current-password"
+                label="Password"
+                value={password}
+                onChange={(event) => { setPassword(event.target.value) }}
               />
             </Grid>
-            {/* <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
-              />
-            </Grid> */}
           </Grid>
           <Button
             type="submit"
             fullWidth
             variant="contained"
             color="primary"
-            className={classes.submit}
+            onClick={createUser}
           >
             Sign Up
           </Button>
@@ -128,11 +198,12 @@ export default function SignUp() {
               </Link>
             </Grid>
           </Grid>
-        </form>
       </div>
       <Box mt={5}>
         <Message />
       </Box>
     </Container>
   );
+  
 }
+export default SignUp;
