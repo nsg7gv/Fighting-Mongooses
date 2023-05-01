@@ -5,6 +5,7 @@ import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc, query, where } 
 import { Typography, Container, Grid, Card, CardActions, CardContent, TextField, CssBaseline, Divider, Button, Popover, PaperProps } from "@material-ui/core";
 import { dbStorage } from '../firebase';
 import { ref, uploadBytes } from "firebase/storage";
+import UserContext from './UserContext';
 
 const getOptions = () => {
     return [
@@ -71,11 +72,13 @@ const getOptions = () => {
   const optionsLevel = getOptionsLevel(); //Drop down menu
   const optionsSem = getOptionsSem(); //Drop down menu
   const optionsYear = getOptionsYear(); //Drop down menu
+  
 
 const Profile = () => {
 //   const userEmail = 'sam@umkc.edu';
-    const userEmail = 'luke@umkc.edu';
     const [data, setData] = useState([]); //Firestore Document
+    const { user } = React.useContext(UserContext);
+    const userEmail = user.Email;
 
     const [studentAnchor, setStudentAnchor] = useState(null)
     const closeStudentAnchor = () => {
