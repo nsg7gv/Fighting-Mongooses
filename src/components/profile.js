@@ -6,6 +6,13 @@ import { Typography, Container, Grid, Card, CardActions, CardContent, TextField,
 import { dbStorage } from '../firebase';
 import { ref, uploadBytes } from "firebase/storage";
 import UserContext from './UserContext';
+import { getDownloadURL } from 'firebase/storage';
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import { Link } from 'react-router-dom';
 
 const getOptions = () => {
     return [
@@ -423,7 +430,6 @@ const handleChangeYear = async (event) => {
         docRef.update({ it321: value }).then(() => {});        
     };
  
- {/* */}   
     useEffect(() => {
         console.log('Searching')
         db.collection('profile').doc(userEmail).get()
@@ -444,33 +450,96 @@ const handleChangeYear = async (event) => {
     const[GTACert, setGTACert] = useState(null)
 
     const uploadTranscript = () => {
-        console.log('working')
+        console.log('working');
         if (transcript == null) return;
-        const transcriptRef = ref(dbStorage, `transcripts/${data.LName + '_transcript'}`)
+        const transcriptRef = ref(dbStorage, `transcripts/${userEmail}_transcript`);
         uploadBytes(transcriptRef, transcript).then(() => {
             alert('Upload Complete');
-        })
+        });
     };
-
+    
     const uploadGTACert = () => {
-        console.log('working')
+        console.log('working');
         if (GTACert == null) return;
-        const gtacertRef = ref(dbStorage, `gtacert/${data.LName + '_gtacert'}`)
+        const gtacertRef = ref(dbStorage, `gtacert/${userEmail}_gtacert`);
         uploadBytes(gtacertRef, GTACert).then(() => {
             alert('Upload Complete');
-        })
+        });
     };
+    
+
+    const [transcriptURL, setTranscriptURL] = useState(null);
+const [GTACertURL, setGTACertURL] = useState(null);
+
+// Add this function to fetch download URLs of existing files:
+const fetchDownloadURLs = async () => {
+    if (!userEmail) return;
+
+    try {
+        const transcriptRef = ref(dbStorage, `transcripts/${userEmail}_transcript`);
+        const transcriptDownloadURL = await getDownloadURL(transcriptRef);
+        setTranscriptURL(transcriptDownloadURL);
+    } catch (error) {
+        console.error('Error fetching transcript:', error);
+    }
+
+    try {
+        const gtacertRef = ref(dbStorage, `gtacert/${userEmail}_gtacert`);
+        const GTACertDownloadURL = await getDownloadURL(gtacertRef);
+        setGTACertURL(GTACertDownloadURL);
+    } catch (error) {
+        console.error('Error fetching GTA Certificate:', error);
+    }
+};
+
+
+// Call the fetchDownloadURLs function when the component mounts or when data.LName changes:
+useEffect(() => {
+    fetchDownloadURLs();
+}, [data.LName]);
+
+
 
   return (
     <>
 {/*  Profile section */}
         <CssBaseline />
+        <AppBar position="static">
+    <Toolbar style={{ backgroundColor: '#005293', color: 'white' }}>
+        <IconButton
+            size="large"
+            edge="start"
+            style={{ backgroundColor: '#005293', color: 'white' }}
+            aria-label="menu"
+            sx={{ mr: 2 }}
+            component={Link}
+            to="/"
+        >
+            <MenuIcon />
+        </IconButton>
+        <div style={{ flex: 1 }}></div>
+        <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 0 }}
+            style={{ textAlign: 'center', width: '100%' }}
+        >
+            Student Information
+        </Typography>
+        <div style={{ flex: 1 }}></div>
+        <Button
+            style={{ backgroundColor: '#005293', color: 'white' }}
+            component={Link}
+            to="/signup"
+        >
+            Logout
+        </Button>
+    </Toolbar>
+</AppBar>
+
         <main>
             <div>
                 <Container maxWidth='lg'>
-                    <Typography variant='h4' align='center' color='textprimary' gutterBottom='true'>
-                        Student Information:
-                    </Typography>
                     <Divider variant='inset' />
                     <Grid container spacing={5} justifyContent='center' columns={5}>
                         <Grid item>
@@ -1164,29 +1233,43 @@ const handleChangeYear = async (event) => {
     <br></br>
 
     <Container maxWidth='lg'>
-        <Typography variant='h4' align='center' color='textprimary' gutterBottom='true'>
-            Files:
-        </Typography>
-        <Divider variant='inset' />
-        <Grid container spacing={5} justifyContent='center' columns={5} direction='column'>
-            <Grid item>
-                <Typography variant='p' align='center' color='textSecondary' paragraph>
-                    <p>Transcript: </p>
-                    <input type="file" onChange={(event) => {setTranscript(event.target.files[0])}}/>
-                    <Button variant="contained" onClick={uploadTranscript}>Upload</Button>
-                </Typography>
-            </Grid>
-
-            <Grid item>
-                <Typography variant='p' align='center' color='textSecondary' paragraph>
-                    <p>GTA Certification:</p>
-                    <input type="file" onChange={(event) => {setGTACert(event.target.files[0])}}/>
-                    <Button variant="contained" onClick={uploadGTACert}>Upload</Button>
-                </Typography>
-            </Grid>
-
+    <Typography variant='h4' align='center' color='textPrimary' gutterBottom>
+        Files:
+    </Typography>
+    <Divider variant='inset' />
+    <Grid container spacing={5} justifyContent='center' columns={5} direction='column'>
+        <Grid item>
+            <Typography variant='p' align='center' color='textSecondary' paragraph>
+                <p>Transcript: </p>
+                <input type="file" onChange={(event) => {setTranscript(event.target.files[0])}}/>
+                <Button variant="contained" onClick={uploadTranscript}>Upload</Button>
+                {transcriptURL && (
+                    <p>
+                        <a href={transcriptURL} target="_blank" rel="noopener noreferrer">
+                            Download Transcript
+                        </a>
+                    </p>
+                )}
+            </Typography>
         </Grid>
-    </Container>
+
+        <Grid item>
+            <Typography variant='p' align='center' color='textSecondary' paragraph>
+                <p>GTA Certification:</p>
+                <input type="file" onChange={(event) => {setGTACert(event.target.files[0])}}/>
+                <Button variant="contained" onClick={uploadGTACert}>Upload</Button>
+                {GTACertURL && (
+                    <p>
+                        <a href={GTACertURL} target="_blank" rel="noopener noreferrer">
+                            Download GTA Certificate
+                        </a>
+                    </p>
+                )}
+            </Typography>
+        </Grid>
+    </Grid>
+</Container>
+
             </div>
         </main>
 
